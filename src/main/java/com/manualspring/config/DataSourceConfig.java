@@ -1,13 +1,19 @@
 package com.manualspring.config;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import jakarta.persistence.EntityManagerFactory;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -17,21 +23,38 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl("jdbc:h2:mem:testdb");
-        ds.setUsername("sa");
-        ds.setPassword("");
-        ds.setDriverClassName("org.h2.Driver");
-        ds.setMaximumPoolSize(10);
-        ds.setMinimumIdle(5);
-        return ds;
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://avnadmin:AVNS_CPkMOIFY319JcIHJOyF@mysql-675e8c2-argus-clone-database.b.aivencloud.com:18792/defaultdb?ssl-mode=REQUIRED");
+        config.setUsername("avnadmin");
+        config.setPassword("AVNS_CPkMOIFY319JcIHJOyF");
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(2);
+        config.setConnectionTimeout(30000);
+        config.setIdleTimeout(600000);
+        config.setMaxLifetime(1800000);
+        config.setPoolName("just pool");
+
+        return new HikariDataSource(config);
     }
 
     @Bean
-    public LocalEntityManagerFactoryBean entityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(false);
+        vendorAdapter.setShowSql(true);
+
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan("com.manualspring.entities");
+        factory.setDataSource(dataSource);
+        factory.setJpaPropertyMap(Map.of("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect", "hibernate.hbm2ddl.auto", "update"));
+
+        return factory;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {}
+    public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
 }
