@@ -24,12 +24,12 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://avnadmin:AVNS_CPkMOIFY319JcIHJOyF@mysql-675e8c2-argus-clone-database.b.aivencloud.com:18792/defaultdb?ssl-mode=REQUIRED");
+        config.setJdbcUrl("jdbc:mysql://avnadmin:AVNS_CPkMOIFY319JcIHJOyF@mysql-675e8c2-argus-clone-database.b.aivencloud.com:18792/spring_manual_playground_schema?ssl-mode=REQUIRED");
         config.setUsername("avnadmin");
         config.setPassword("AVNS_CPkMOIFY319JcIHJOyF");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setMaximumPoolSize(10);
-        config.setMinimumIdle(2);
+        config.setMinimumIdle(5);
         config.setConnectionTimeout(30000);
         config.setIdleTimeout(600000);
         config.setMaxLifetime(1800000);
@@ -48,7 +48,7 @@ public class DataSourceConfig {
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.manualspring.entities");
         factory.setDataSource(dataSource);
-        factory.setJpaPropertyMap(Map.of("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect", "hibernate.hbm2ddl.auto", "update"));
+        factory.setJpaPropertyMap(Map.of("hibernate.dialect", "org.hibernate.dialect.MySQLDialect", "hibernate.hbm2ddl.auto", "update"));
 
         return factory;
     }
