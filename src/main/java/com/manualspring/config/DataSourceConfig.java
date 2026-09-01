@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import jakarta.persistence.EntityManagerFactory;
 
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -13,7 +14,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.Map;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -48,7 +49,12 @@ public class DataSourceConfig {
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.manualspring.entities");
         factory.setDataSource(dataSource);
-        factory.setJpaPropertyMap(Map.of("hibernate.dialect", "org.hibernate.dialect.MySQLDialect", "hibernate.hbm2ddl.auto", "update"));
+
+        Properties properties = new Properties();
+        properties.put(AvailableSettings.HBM2DDL_AUTO, "update");
+        properties.put(AvailableSettings.DIALECT, "org.hibernate.dialect.MySQLDialect");
+
+        factory.setJpaProperties(properties);
 
         return factory;
     }
