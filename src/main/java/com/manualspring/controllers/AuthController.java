@@ -12,7 +12,7 @@ import com.manualspring.dtos.AuthRequest;
 import com.manualspring.util.JwtUtil;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtil;

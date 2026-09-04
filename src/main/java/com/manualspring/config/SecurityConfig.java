@@ -56,7 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec("super-secret-string-that-is-long-enough-for-256-bit".getBytes(), "HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec("super-secret-string-that-is-long-enough-for-256-bit".getBytes(), "HmacSHA384");
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).build();
     }
 }
