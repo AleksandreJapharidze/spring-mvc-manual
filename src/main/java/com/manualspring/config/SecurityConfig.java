@@ -1,5 +1,7 @@
 package com.manualspring.config;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.context.annotation.Bean;
@@ -56,7 +58,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec("super-secret-string-that-is-long-enough-for-jwt".getBytes(), "HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec("super-secret-string-that-is-long-enough-for-jwt".getBytes(StandardCharsets.UTF_8), "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).build();
     }
 }
